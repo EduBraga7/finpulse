@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Source {
+  id        String    @id @default(cuid())
+  name      String
+  url       String    @unique
+  category  String    @default("geral") // "macro", "acoes", "fii", "cripto", "geral"
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  news      RawNews[]
+}
+
+model RawNews {
+  id          String        @id @default(cuid())
+  title       String
+  link        String        @unique
+  summary     String?
+  content     String?
+  pubDate     DateTime?
+  sourceId    String?
+  source      Source?       @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  createdAt   DateTime      @default(now())
+  posts       CuratedPost[]
+}
+
+model CuratedPost {
+  id               String   @id @default(cuid())
+  rawNewsId        String
+  rawNews          RawNews  @relation(fields: [rawNewsId], references: [id], onDelete: Cascade)
+  score            Float    // Nota de relevância (1.0 a 10.0)
+  reasoning        String?  // Justificativa do score pela IA
+  category         String?  // Macro, Ações, FIIs, etc.
+  
+  // Conteúdo focado em Instagram
+  instagramCaption String?  // Legenda completa do Instagram (gancho + texto + cta + hashtags)
+  slidesJson       String?  // Slides do Carrossel em formato JSON estruturado
+  
+  // Canais complementares
+  linkedinPost     String?
+  twitterPost      String?
+  newsletterPost   String?
+  
+  status           String   @default("REVIEW") // REVIEW, APPROVED, PUBLISHED, ARCHIVED
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
