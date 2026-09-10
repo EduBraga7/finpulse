@@ -15,8 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FinPulse AI — Estúdio de Conteúdo Financeiro",
-  description: "Curadoria inteligente de notícias e geração de carrosséis para o Instagram",
+  title: "FinPulse AI — Autonomous Financial Intelligence & Content Studio",
+  description:
+    "Curadoria inteligente de notícias, briefing executivo e estúdio de carrosséis visuais para redes sociais",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
