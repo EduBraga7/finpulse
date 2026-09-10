@@ -37,27 +37,26 @@ export const DEFAULT_FINANCE_SOURCES = [
 ];
 
 export async function ensureDefaultSources() {
-  // Limpar fontes estrangeiras antigas se existirem
-  const foreignUrls = [
-    "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664",
-    "https://www.coindesk.com/arc/outboundfeeds/rss/",
-  ];
+  try {
+    const count = await prisma.source.count();
+    if (count >= DEFAULT_FINANCE_SOURCES.length) {
+      return;
+    }
 
-  await prisma.source.deleteMany({
-    where: { url: { in: foreignUrls } },
-  });
-
-  for (const src of DEFAULT_FINANCE_SOURCES) {
-    await prisma.source.upsert({
-      where: { url: src.url },
-      update: { name: src.name, category: src.category },
-      create: {
-        name: src.name,
-        url: src.url,
-        category: src.category,
-        active: true,
-      },
-    });
+    for (const src of DEFAULT_FINANCE_SOURCES) {
+      await prisma.source.upsert({
+        where: { url: src.url },
+        update: { name: src.name, category: src.category },
+        create: {
+          name: src.name,
+          url: src.url,
+          category: src.category,
+          active: true,
+        },
+      });
+    }
+  } catch (error) {
+    console.warn("[FinPulse] Conexão com banco em inicialização:", (error as Error).message);
   }
 }
 

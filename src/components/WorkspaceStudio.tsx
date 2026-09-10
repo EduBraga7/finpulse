@@ -14,9 +14,12 @@ import {
   Trash2,
   PenTool,
   Tag,
+  BookOpen,
+  Palette,
 } from "lucide-react";
 import { InstagramSlideView } from "./InstagramSlideView";
 import { InstagramIcon } from "./InstagramIcon";
+import { ExecutiveBriefingView } from "./ExecutiveBriefingView";
 import { CarouselSlide } from "@/lib/gemini";
 import {
   curateNewsAction,
@@ -62,6 +65,7 @@ export function WorkspaceStudio({ initialNews }: { initialNews: RawNewsData[] })
   const [scoreFilter, setScoreFilter] = useState<"all" | "high" | "medium">("all");
   const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"briefing" | "studio">("briefing");
   const [isPending, startTransition] = useTransition();
   const toast = useToast();
 
@@ -365,78 +369,125 @@ export function WorkspaceStudio({ initialNews }: { initialNews: RawNewsData[] })
       </div>
 
       {/* ============================================================ */}
-      {/* PAINEL DA DIREITA: Estúdio de Criação do Carrossel (8 colunas) */}
+      {/* PAINEL DA DIREITA: Leitura/Briefing & Estúdio Visual (8 colunas) */}
       {/* ============================================================ */}
-      <div className="lg:col-span-8 flex flex-col space-y-4">
+      <div className="lg:col-span-8 flex flex-col space-y-3">
+        {/* Seletor de Modo: Leitura/Briefing vs Estúdio */}
+        <div className="flex flex-wrap items-center justify-between gap-2 p-1.5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl shadow-2xs">
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setViewMode("briefing")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                viewMode === "briefing"
+                  ? "bg-emerald-600 text-white shadow-xs"
+                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800"
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Modo Leitura & Briefing</span>
+            </button>
+            <button
+              onClick={() => setViewMode("studio")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                viewMode === "studio"
+                  ? "bg-emerald-600 text-white shadow-xs"
+                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800"
+              }`}
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span>Estúdio de Carrosséis</span>
+              {curated && (
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+              )}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 pr-1">
+            {selectedNews && (
+              <button
+                onClick={() => handleDeleteNews(selectedNews.id)}
+                disabled={isPending}
+                className="text-xs text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 flex items-center gap-1 transition-colors px-2 py-1 rounded-md border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800 cursor-pointer"
+                title="Excluir matéria completamente do banco"
+              >
+                <Trash2 className="w-3 h-3" />
+                <span className="hidden sm:inline">Excluir Matéria</span>
+              </button>
+            )}
+          </div>
+        </div>
+
         {selectedNews ? (
           <div className="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm transition-colors">
-            {/* Header da Notícia Ativa */}
-            <div className="pb-5 mb-6 border-b border-slate-200 dark:border-zinc-800/80">
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
-                    {selectedNews.source?.name || "Fonte"}
-                  </span>
-                  <span className="text-xs text-slate-400 dark:text-zinc-500 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {selectedNews.pubDate
-                      ? new Date(selectedNews.pubDate).toLocaleDateString("pt-BR", {
-                          day: "2-digit",
-                          month: "long",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : "Recente"}
-                  </span>
-                </div>
+            {viewMode === "briefing" ? (
+              <ExecutiveBriefingView
+                news={selectedNews}
+                curated={curated}
+                slides={parsedSlides}
+                isPending={isPending}
+                onCurate={handleCurate}
+                onSwitchToStudio={() => setViewMode("studio")}
+              />
+            ) : (
+              <>
+                {/* Header da Notícia Ativa no Estúdio */}
+                <div className="pb-5 mb-6 border-b border-slate-200 dark:border-zinc-800/80">
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+                        {selectedNews.source?.name || "Fonte"}
+                      </span>
+                      <span className="text-xs text-slate-400 dark:text-zinc-500 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {selectedNews.pubDate
+                          ? new Date(selectedNews.pubDate).toLocaleDateString("pt-BR", {
+                              day: "2-digit",
+                              month: "long",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })
+                          : "Recente"}
+                      </span>
+                    </div>
 
-                <div className="flex items-center gap-2">
-                  {curated && (
-                    <>
-                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                        ★ Relevância: {curated.score.toFixed(1)}/10
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                          curated.status === "APPROVED"
-                            ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700"
-                            : "bg-purple-100 dark:bg-purple-950/50 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
-                        }`}
-                      >
-                        {curated.status === "APPROVED" ? "Aprovado" : "Pronto p/ Instagram"}
-                      </span>
-                    </>
+                    <div className="flex items-center gap-2">
+                      {curated && (
+                        <>
+                          <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                            ★ Relevância: {curated.score.toFixed(1)}/10
+                          </span>
+                          <span
+                            className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                              curated.status === "APPROVED"
+                                ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700"
+                                : "bg-purple-100 dark:bg-purple-950/50 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+                            }`}
+                          >
+                            {curated.status === "APPROVED" ? "Aprovado" : "Pronto p/ Instagram"}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-zinc-100 leading-snug">
+                    <a
+                      href={selectedNews.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors inline-flex items-center gap-1.5 group"
+                    >
+                      <span>{selectedNews.title}</span>
+                      <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 shrink-0" />
+                    </a>
+                  </h2>
+
+                  {selectedNews.summary && (
+                    <p className="text-xs text-slate-600 dark:text-zinc-400 mt-2 leading-relaxed">
+                      {selectedNews.summary}
+                    </p>
                   )}
-                  <button
-                    onClick={() => handleDeleteNews(selectedNews.id)}
-                    disabled={isPending}
-                    className="text-xs text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 flex items-center gap-1 transition-colors px-2 py-1 rounded-md border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800 cursor-pointer"
-                    title="Excluir matéria completamente do banco"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                    <span className="hidden sm:inline">Excluir</span>
-                  </button>
                 </div>
-              </div>
-
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-zinc-100 leading-snug">
-                <a
-                  href={selectedNews.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors inline-flex items-center gap-1.5 group"
-                >
-                  <span>{selectedNews.title}</span>
-                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 shrink-0" />
-                </a>
-              </h2>
-
-              {selectedNews.summary && (
-                <p className="text-xs text-slate-600 dark:text-zinc-400 mt-2 leading-relaxed">
-                  {selectedNews.summary}
-                </p>
-              )}
-            </div>
 
             {/* Conteúdo do Estúdio: Sem Carrossel vs Com Carrossel */}
             {!curated ? (
@@ -526,6 +577,8 @@ export function WorkspaceStudio({ initialNews }: { initialNews: RawNewsData[] })
                   </div>
                 </div>
               </div>
+            )}
+              </>
             )}
           </div>
         ) : (

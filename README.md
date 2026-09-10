@@ -1,4 +1,4 @@
-# 📈 FinPulse AI — Autonomous Financial Content & Carousel Studio
+# 📈 FinPulse AI — Autonomous Financial Intelligence & Content Studio
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js%2016-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
@@ -12,24 +12,24 @@
 </p>
 
 <p align="center">
-  <b>Plataforma inteligente de curadoria editorial e geração automatizada de carrosséis financeiros de alto impacto para redes sociais (Instagram, LinkedIn e newsletters).</b>
+  <b>Hub inteligente de inteligência de mercado e estúdio automatizado de conteúdo financeiro: leitura limpa de notícias com diagnóstico de impacto macroeconômico (Score 1 a 10) e geração de carrosséis visuais de alto impacto para redes sociais.</b>
 </p>
 
 ---
 
 ## 💡 O Problema & O Valor de Negócio (Business Case)
 
-Criadores de conteúdo financeiro, analistas de RI e gestoras de investimentos enfrentam um gargalo crítico de produção:
-1. **Sobrecarga de Informação:** Centenas de fatos relevantes e notícias são publicadas diariamente em dezenas de veículos (InfoMoney, Brazil Journal, Money Times, etc.).
-2. **Tempo Excessivo em Design:** Diagramar carrosséis informativos no Canva ou Figma consome em média **1 a 2 horas por post**.
-3. **Inconsistência Visual e Editorial:** Dificuldade em manter linguagem persuasiva com fontes confiáveis e design padronizado.
+Investidores, analistas de RI e criadores de conteúdo financeiro enfrentam dois gargalos diários:
+1. **Sobrecarga de Informação & Ruído:** Centenas de matérias são publicadas todo dia em veículos como InfoMoney, Brazil Journal e Money Times. Distinguir o que é oscilação irrelevante do que realmente impacta fundamentos exige tempo.
+2. **Gargalo de Produção Visual:** Diagramar carrosséis informativos no Canva ou Figma consome em média **1 a 2 horas por post**.
 
-### 🚀 A Solução FinPulse AI
-O **FinPulse AI** automatiza o ciclo completo de produção de conteúdo:
-- 📡 **Ingestão Contínua:** Coleta notícias em tempo real via feeds RSS do mercado financeiro brasileiro.
-- 🧠 **Curadoria Analítica com IA:** Avalia o impacto de mercado (score 1 a 10), filtra ruídos e categoriza a pauta.
-- ✍️ **Storytelling Estruturado:** Transforma notícias complexas em uma narrativa didática de 4 a 6 lâminas (*Radar → O Fato → Impacto nos Mercados → Conclusão/Call to Action*).
-- 🎨 **Estúdio Visual de Exportação:** Renderiza carrosséis em resolução nativa (1080x1350 ou 1080x1080) e gera um pacote `.ZIP` com as imagens e a `legenda.txt` pronta para copiar e postar.
+### 🚀 A Solução FinPulse AI: Uma Plataforma de Duplo Propósito
+
+O **FinPulse AI** une consumo inteligente de mercado e automação de conteúdo em um único workspace:
+- 📡 **Ingestão Contínua:** Coleta notícias em tempo real via feeds RSS dos maiores veículos de finanças do Brasil.
+- 🧠 **Diagnóstico Macroeconômico com IA:** Avalia o impacto real da notícia (score 1 a 10), separando fatos críticos de ruídos diários.
+- 📰 **Modo Leitura & Briefing Executivo:** Permite consumir a síntese da notícia, tese de mercado e impactos em juros, bolsa e fundos em segundos.
+- 🎨 **Estúdio Autônomo de Carrosséis:** Transforma qualquer pauta em um carrossel didático de 4 a 5 lâminas com design profissional, edição inline e exportação em alta resolução (PNG e ZIP com legenda.txt).
 
 ---
 
@@ -37,44 +37,54 @@ O **FinPulse AI** automatiza o ciclo completo de produção de conteúdo:
 
 ```mermaid
 flowchart TD
-    A[Fontes de Notícias RSS\nInfoMoney, Brazil Journal, Money Times] -->|Ingestão & Parsing| B[Next.js Server Actions & API]
-    B -->|Pipeline de Curadoria| C[Google Gemini 2.5 Flash\nScore + Síntese + Storyline]
-    C -->|Persistência com Pooled Connection| D[(Neon Serverless Postgres\nAWS São Paulo)]
-    D -->|Hydration em Tempo Real| E[FinPulse Studio UI\nNext.js 16 + Tailwind CSS 4]
-    E -->|Customização em Tela| F[Brand Kit & Editor Inline de Lâminas]
-    F -->|Simulador Mobile| G[Instagram Feed Mockup]
-    F -->|Renderização Client-Side\nhtml-to-image + JSZip| H[Download Instantâneo\nPNG 1080px & ZIP com legenda.txt]
+    A[Fontes RSS do Mercado\nInfoMoney, Brazil Journal, Money Times, Seu Dinheiro] -->|Ingestão & Deduplicação| B[Next.js Server Actions & API]
+    B -->|Pipeline Analítico| C[Google Gemini 2.5 Flash\nScore 1-10 + Diagnóstico + Storyline]
+    C -->|Persistência com Connection Pooling| D[(Neon Serverless Postgres\nAWS São Paulo)]
+    D -->|Hydration em Tempo Real| E[FinPulse Workspace UI\nNext.js 16 + Tailwind CSS 4]
+    
+    E -->|Visão 1: Consumo Diário| F[Modo Leitura & Briefing Executivo\nSíntese de Mercado + Impactos]
+    E -->|Visão 2: Criação de Conteúdo| G[Estúdio de Carrosséis\nBrand Kit + Temas + Editor Inline]
+    
+    G -->|Renderização Client-Side GPU| H[html-to-image + JSZip\nDownload PNG 1080px & ZIP com legenda.txt]
 ```
 
 ---
 
 ## 🌟 Principais Funcionalidades
 
-### 1. 🧠 Motor de Curadoria & IA Generativa
+### 1. 📰 Modo Leitura & Briefing Executivo
+- **Leitura Despoluída de Mercado:** Acompanhe as principais notícias do dia agregadas de veículos confiáveis (InfoMoney, Brazil Journal, Money Times, Seu Dinheiro) sem banners ou anúncios intrusivos.
+- **Diagnóstico de Impacto Macroeconômico:** A IA resume o fato em tópicos diretos e contextualiza o impacto no mercado (B3, juros, câmbio e carteiras de investimento).
+- **Classificação Visual de Score:** Identificação instantânea entre pautas de *Impacto Crítico* (≥ 8.5), *Alto Impacto* (7.0 - 8.4), *Moderado* (5.0 - 6.9) e *Ruído de Mercado* (< 5.0).
+- **Transição Fluida em 1 Clique:** Alterne instantaneamente entre o briefing e o estúdio de carrossel.
+
+### 2. 🧠 Motor de Curadoria & IA Generativa
 - **Pipeline Editorial Inteligente:** Análise de relevância baseada em métricas financeiras reais (inflação, juros, balanços trimestrais, M&A).
 - **Prompt Engineering Estruturado:** Saída estritamente tipada em JSON, garantindo títulos chamativos, dados destacados e takeaways consistentes sem alucinações.
 - **Ajuste de Tom em 1 Clique:** Reescreva legendas e lâminas alternando entre *Formal/Analítico*, *Didático/Iniciante* ou *Urgência de Mercado*.
 
-### 2. 🎨 Estúdio Visual & Design System
-- **4 Temas Profissionais Pré-configurados:**
-  - 🟢 **Terminal Bloomberg:** Fundo escuro com acentos em verde esmeralda financeiro.
-  - ⚪ **Editorial Moderno:** Fundo claro refinado de alta legibilidade.
-  - 🟣 **Clean Minimalist:** Estilo minimalista contemporâneo focado em tipografia.
-  - 🟡 **Ouro & Safira:** Visual premium voltado a private banking e fundos.
+### 3. 🎨 Estúdio Visual & Design System
+- **5 Temas Profissionais Pré-configurados:**
+  - 🟢 **B3 Emerald:** Visual inspirado no terminal financeiro com fundo escuro e verde esmeralda.
+  - 🔵 **Deep Navy:** Tons azul-marinho profundos voltados a macroeconomia, títulos públicos e juros.
+  - 🟡 **Gold Wealth:** Visual sofisticado em âmbar/dourado ideal para fundos imobiliários e dividendos.
+  - ⚪ **Clean Minimalist:** Estilo contemporâneo minimalista de alta legibilidade.
+  - 🔴 **Ruby Urgency:** Destaque em rubi vibrante para notícias de urgência e reviravoltas de mercado.
 - **Brand Kit Customizável:** Configure o nome da sua marca, @handle do Instagram e monograma com persistência em `localStorage`.
 - **Modo Edição Inline:** Altere qualquer título, número ou badge diretamente sobre o slide antes de baixar.
-- **Zero Poluição Visual:** Remove marcadores redundantes para garantir compatibilidade estética perfeita com os overlays nativos do Instagram.
+- **Controle de Proporção:** Alterne dinamicamente entre formato quadrado `1:1` (1080x1080) e retrato `4:5` (1080x1350).
 
-### 3. 📱 Simulador "Instagram Feed Mockup"
-- Visualize exatamente como o carrossel se comportará na linha do tempo do usuário no smartphone, incluindo avatar, nome de usuário, proporção 4:5 e legenda expandida.
+### 4. 📱 Simulador "Instagram Feed Mockup"
+- Visualize exatamente como o carrossel se comportará na linha do tempo do smartphone, incluindo avatar, nome de usuário, proporção 4:5 e legenda expandida.
 
-### 4. 📦 Pipeline de Exportação de Alta Fidelidade
-- **Exportação 100% Client-Side:** Gera arquivos PNG em resolução oficial de 1080x1350 (4:5) ou 1080x1080 (1:1) utilizando `html-to-image`.
+### 5. 📦 Pipeline de Exportação de Alta Fidelidade
+- **Exportação 100% Client-Side:** Gera arquivos PNG em resolução oficial de 1080px utilizando `html-to-image`.
 - **Pacote ZIP Automatizado:** Compacta todas as lâminas e inclui o arquivo `legenda.txt` com ganchos, corpo formatado e hashtags estratégicas.
 
-### 5. 🌗 Experiência de Uso (UX)
-- **Tema Dark / Light Completo:** Alternância suave de modo escuro e claro em toda a aplicação.
-- **CRUD Editorial:** Adicione pautas manuais, exclua postagens descartadas e gerencie fontes ativas.
+### 6. 🌗 Produtividade & UX Completa
+- **Tema Dark / Light Completo:** Alternância suave de modo escuro e claro em toda a interface.
+- **Geração em Lote ("Top 3"):** Curadoria e roteirização das notícias mais recentes em fila com respeito a rate limits.
+- **CRUD Editorial & Pautas Manuais:** Adicione links ou pautas personalizadas, descarte matérias irrelevantes e gerencie fontes ativas.
 
 ---
 
