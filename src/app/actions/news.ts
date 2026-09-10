@@ -17,9 +17,21 @@ export async function syncNewsAction() {
   try {
     const result = await syncAllFeeds();
     safeRevalidate("/");
-    return { success: true, newCount: result.newItemsCount };
+    return { success: true, newCount: result.newItemsCount, cleanedCount: result.cleanedCount };
   } catch (error) {
     console.error("Erro ao sincronizar notícias:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function cleanupOldNewsAction(days = 14) {
+  try {
+    const { cleanupOldUncuratedNews } = await import("@/lib/rss");
+    const cleaned = await cleanupOldUncuratedNews(days);
+    safeRevalidate("/");
+    return { success: true, count: cleaned };
+  } catch (error) {
+    console.error("Erro na limpeza de notícias:", error);
     return { success: false, error: (error as Error).message };
   }
 }

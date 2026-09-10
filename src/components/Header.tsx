@@ -22,7 +22,9 @@ export function Header({ hasApiKey }: HeaderProps) {
       if (res.success) {
         toast.success(
           "Sincronização concluída",
-          `${res.newCount} novas matérias encontradas e adicionadas ao feed.`
+          res.cleanedCount && res.cleanedCount > 0
+            ? `${res.newCount} novas matérias encontradas (${res.cleanedCount} matérias antigas limpas).`
+            : `${res.newCount} novas matérias encontradas e adicionadas ao feed.`
         );
       } else {
         toast.error("Erro na busca", res.error);

@@ -108,5 +108,35 @@ export async function syncAllFeeds() {
     }
   }
 
-  return { newItemsCount };
+  // Limpeza automática de notícias brutas que passaram de 14 dias e não foram curadas
+  const cleanedCount = await cleanupOldUncuratedNews(14);
+
+  return { newItemsCount, cleanedCount };
+}
+
+/**
+ * Remove notícias brutas do RSS com mais de X dias que NUNCA foram transformadas em post.
+ * Matérias que você analisou, curou ou aprovou são mantidas permanentemente.
+ */
+export async function cleanupOldUncuratedNews(retentionDays = 14) {
+  try {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
+
+    const result = await prisma.rawNews.deleteMany({
+      where: {
+        createdAt: { lt: cutoffDate },
+        posts: { none: {} },
+      },
+    });
+
+    if (result.count > 0) {
+      console.log(`[Auto-cleanup] ${result.count} notícias brutas com mais de ${retentionDays} dias foram limpas.`);
+    }
+
+    return result.count;
+  } catch (error) {
+    console.error("[Auto-cleanup] Erro ao limpar notícias antigas:", error);
+    return 0;
+  }
 }
